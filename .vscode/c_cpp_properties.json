@@ -1,0 +1,22 @@
+
+{
+    "configurations": [
+        {
+            "name": "ARM64",
+            "compilerPath": "/usr/bin/g++",
+            "intelliSenseMode": "linux-gcc-arm64",
+            "cppStandard": "c++11",
+            "includePath": [
+                "${workspaceFolder}/src/**",
+                "${workspaceFolder}/thirdparty/**",
+                "/usr/include/aarch64-linux-gnu/qt5/**"
+            ],
+            "defines": [
+                "QT_CORE_LIB",
+                "QT_NETWORK_LIB",
+                "QT_NO_EXCEPTIONS"
+            ]
+        }
+    ],
+    "version": 4
+}
