@@ -52,9 +52,12 @@
 #ifdef WITH_COMPAT_PLAYNITE
   #include "providers/playnite/PlayniteProvider.h"
 #endif
+#ifdef WITH_COMPAT_RA
+  #include "providers/ra/RetroAchievementsProvider.h"
+#endif
 
 #include <QFile>
-
+#include <QByteArray>
 
 namespace {
 HashMap<KeyEvent, QVector<QKeySequence>, EnumHash> default_keymap()
@@ -125,6 +128,9 @@ std::vector<std::unique_ptr<providers::Provider>> create_providers()
 #endif
 #ifdef WITH_COMPAT_PLAYNITE
         MKENTRY(playnite::PlayniteProvider)
+#endif
+#ifdef WITH_COMPAT_RA
+        MKENTRY(retroAchievements::RetroAchievementsProvider)
 #endif
 
         // Make sure these come last as they never add new games

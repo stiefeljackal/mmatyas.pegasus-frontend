@@ -34,7 +34,7 @@ defined(pclinux,var): include(lutris/lutris.pri)
 # All platforms
 include(logiqx/logiqx.pri)
 include(skraper/skraper.pri)
-
+include(ra/ra.pri)
 
 defined(USES_JSON_CACHE, var) {
     DEFINES *= WITH_JSON_CACHE
