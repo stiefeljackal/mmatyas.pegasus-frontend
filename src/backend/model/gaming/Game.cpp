@@ -21,7 +21,6 @@
 #include "model/gaming/Collection.h"
 #include "model/gaming/GameFile.h"
 
-
 namespace {
 QString joined_list(const QStringList& list) { return list.join(QLatin1String(", ")); }
 } // namespace
@@ -169,4 +168,55 @@ Game& Game::setCollections(std::vector<model::Collection*>&& collections)
 bool sort_games(const model::Game* const a, const model::Game* const b) {
    return QString::localeAwareCompare(a->sortBy(), b->sortBy()) < 0;
 }
+
+QString Game::externalId(const QString& provider) const
+{
+    return m_data.external_ids.value(provider).toString();
+}
+
+Game& Game::setExternalId(const QString& provider, QString id)
+{
+    if (provider.isEmpty() || externalId(provider) == id)
+        return *this;
+
+    if (id.isEmpty())
+        m_data.external_ids.remove(provider);
+    else
+        m_data.external_ids.insert(provider, std::move(id));
+
+    // Invalidate achievements for this provider when
+    // its game identifier changes.
+    if (m_achievements) {
+        m_achievements->replaceProvider(provider, {});
+        emit achievementsChanged();
+    }
+
+    emit externalIdsChanged();
+    return *this;
+}
+
+QAbstractItemModel* Game::achievementsModel()
+{
+    if (!m_achievements)
+        m_achievements = new AchievementListModel(this);
+
+    return m_achievements;
+}
+
+int Game::achievementCount() const
+{
+    return m_achievements ? m_achievements->count() : 0;
+}
+
+Game& Game::setAchievementsForProvider(const QString& provider, std::vector<Achievement> achievements)
+{
+    achievementsModel();
+
+    m_achievements->replaceProvider(
+        provider, std::move(achievements));
+
+    emit achievementsChanged();
+    return *this;
+}
+
 } // namespace model

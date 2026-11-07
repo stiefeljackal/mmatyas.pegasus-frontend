@@ -22,12 +22,14 @@
 
 #include <QDateTime>
 #include <QStringList>
+#include <QVariantMap>
 
 #ifdef Q_CC_MSVC
 // MSVC has troubles with forward declared QML model types
 #include "model/gaming/Collection.h"
 #include "model/gaming/GameFile.h"
 #endif
+#include "AchievementListModel.h"
 
 namespace model { class Assets; }
 namespace model { class GameFile; }
@@ -49,6 +51,8 @@ struct GameData {
     QStringList publishers;
     QStringList genres;
     QStringList tags;
+
+    QVariantMap external_ids;
 
     short player_count = 1;
     float rating = 0.0;
@@ -186,6 +190,21 @@ public:
     Game& setFiles(std::vector<model::GameFile*>&&);
     Game& setCollections(std::vector<model::Collection*>&&);
 
+    QString externalId(const QString& provider) const;
+    Game& setExternalId(const QString& provider, QString id);
+
+    QVariantMap externalIds() const
+    {
+        return m_data.external_ids;
+    }
+
+    Q_PROPERTY(QVariantMap externalIds READ externalIds NOTIFY externalIdsChanged)
+    QAbstractItemModel* achievementsModel();
+    int achievementCount() const;
+    Game& setAchievementsForProvider(const QString& provider, std::vector<Achievement> achievements);
+
+    Q_PROPERTY(QAbstractItemModel* achievements READ achievementsModel CONSTANT)
+    Q_PROPERTY(int achievementCount READ achievementCount NOTIFY achievementsChanged)
 
 private:
     GameData m_data;
@@ -194,12 +213,15 @@ private:
 
     CollectionListModel* m_collections = nullptr;
     GameFileListModel* m_files = nullptr;
+    AchievementListModel* m_achievements = nullptr;
 
 signals:
     void launchFileSelectorRequested();
     void favoriteChanged();
     void playStatsChanged();
     void missingChanged();
+    void externalIdsChanged();
+    void achievementsChanged();
 
 private slots:
     void onEntryPlayStatsChanged();
