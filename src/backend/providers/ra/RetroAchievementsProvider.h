@@ -14,6 +14,7 @@ public:
 
 private:
     QString webApiKey() const;
+    QString userUlid() const;
 };
 
 } // namespace retroAchievements
