@@ -7,7 +7,9 @@ QT += network
 HEADERS += \
     $$PWD/RetroAchievementsProvider.h \
     $$PWD/RetroAchievementsApiClient.h \
+    $$PWD/RetroAchievementsJsonParser.h \
 
 SOURCES += \
     $$PWD/RetroAchievementsProvider.cpp \
     $$PWD/RetroAchievementsApiClient.cpp \
+    $$PWD/RetroAchievementsJsonParser.cpp \
